@@ -39,7 +39,7 @@ public class FeatureToggleController {
                     @Content(schema = @Schema()) }),
             @ApiResponse(responseCode = "500", content = { @Content(schema = @Schema()) }) })
     @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<FeatureToggle>> getAllCategories (
+    public ResponseEntity<List<FeatureToggle>> getAllFeatures (
             @RequestParam(value = "page", defaultValue = "1",required = false) int page,
             @RequestParam(value = "limit", defaultValue = "15" ,required = false) int limit) throws Exception{
         List<FeatureToggle> featureToggleList= iCommonService.findAll(page, limit);
