@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [Unreleased]
 
-## [Version] - YYYY-MM-DD
+## [0.0.2] - 2023/09/24
 
 ### Added
 
-- Feature 1: Description of the feature.
-- Feature 2: Description of the feature.
+- changelog.md
+- task cucumber() to build.gradle
+- tests correction 
+- cucumber tests scenarios
 
 ### Changed
 
