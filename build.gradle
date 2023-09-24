@@ -94,6 +94,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'io.cucumber:cucumber-java:7.0.0' // Cucumber core library
+    implementation 'io.cucumber:cucumber-spring:7.0.0' // Cucumber Spring integration
+    implementation 'io.cucumber:cucumber-junit:7.0.0' // Cucumber JUnit integration
     // Exclude commons-logging from Spring dependencies
     configurations {
         all*.exclude group: 'commons-logging', module: 'commons-logging'
@@ -109,5 +113,20 @@ tasks.register('deleteStaticFolder', Delete) {
     file(dirName).list().each {
         f ->
             delete "${dirName}/${f}"
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = [
+                    '--glue', 'com.protonmail.landrevillejf.featuretoggle.cucumber', // Set your glue path
+                    '--plugin', 'pretty', // You can customize the output format
+                    'src/test/resources' // Path to your feature files
+            ]
+        }
     }
 }
