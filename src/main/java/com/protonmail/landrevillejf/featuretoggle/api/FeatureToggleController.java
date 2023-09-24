@@ -2,6 +2,7 @@ package com.protonmail.landrevillejf.featuretoggle.api;
 
 import com.protonmail.landrevillejf.featuretoggle.config.Api;
 import com.protonmail.landrevillejf.featuretoggle.entity.FeatureToggle;
+import com.protonmail.landrevillejf.featuretoggle.entity.dto.FeatureToggleDto;
 import com.protonmail.landrevillejf.featuretoggle.exception.ApiExceptionEnums;
 import com.protonmail.landrevillejf.featuretoggle.exception.common.CommonApiException;
 import com.protonmail.landrevillejf.featuretoggle.service.common.ICommonService;
@@ -12,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,8 +31,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeatureToggleController {
 
-    @Autowired
-    ICommonService<FeatureToggle> iCommonService;
+    Logger logger = LoggerFactory.getLogger(FeatureToggleController.class);
+    private final ICommonService<FeatureToggle> iCommonService;
+    private final ModelMapper modelMapper;
 
     //region Get FeatureToggle
     @Operation(summary = "Retrieve all FeatureToggle", tags = { "FeatureToggle", "get", "filter" })
@@ -44,6 +49,7 @@ public class FeatureToggleController {
             @RequestParam(value = "limit", defaultValue = "15" ,required = false) int limit) throws Exception{
         List<FeatureToggle> featureToggleList= iCommonService.findAll(page, limit);
         if (featureToggleList.isEmpty()){
+            logger.error(ApiExceptionEnums.EMPTY_LIST.name());
             throw new CommonApiException(ApiExceptionEnums.EMPTY_LIST.name());
         }
         return new ResponseEntity<>(featureToggleList, HttpStatus.OK);
@@ -61,6 +67,7 @@ public class FeatureToggleController {
         if (featureToggle !=null) {
             return new ResponseEntity<>(featureToggle, HttpStatus.OK);
         } else {
+            logger.error(ApiExceptionEnums.OBJECT_NOT_FOUND.name());
             throw new CommonApiException(ApiExceptionEnums.OBJECT_NOT_FOUND.name());
         }
     }
@@ -76,8 +83,10 @@ public class FeatureToggleController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
             )
-    public ResponseEntity<FeatureToggle> createFeatureToggle(@RequestBody FeatureToggle featureToggle)throws Exception{
+    public ResponseEntity<FeatureToggle> createFeatureToggle(@RequestBody FeatureToggleDto dto)throws Exception{
+        FeatureToggle featureToggle = modelMapper.map(dto, FeatureToggle.class);
         if(featureToggle.getName().isEmpty()){
+            logger.error(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
             throw new CommonApiException(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
         }
         FeatureToggle newFeatureToggle= iCommonService.save(featureToggle);
@@ -97,11 +106,14 @@ public class FeatureToggleController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<FeatureToggle> updateFeatureToggle(@RequestBody FeatureToggle featureToggle,@PathVariable("uid") String uid)throws Exception{
+    public ResponseEntity<FeatureToggle> updateFeatureToggle(@RequestBody FeatureToggleDto dto,@PathVariable("uid") String uid)throws Exception{
+        FeatureToggle featureToggle = modelMapper.map(dto, FeatureToggle.class);
         if(featureToggle.getName().isEmpty()){
+            logger.error(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
             throw new CommonApiException(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
         }
         if(uid.isEmpty()){
+            logger.error(ApiExceptionEnums.OBJECT_NOT_FOUND.name());
             throw new CommonApiException(ApiExceptionEnums.OBJECT_NOT_FOUND.name());
         }
 
@@ -121,6 +133,7 @@ public class FeatureToggleController {
     public ResponseEntity<FeatureToggle> deleteFeatureToggle(@PathVariable("uid") String uid)throws Exception{
 
         if(uid.isEmpty()){
+            logger.error(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
             throw new CommonApiException(ApiExceptionEnums.FIELDS_NULL_EXCEPTION.name());
         }
 
