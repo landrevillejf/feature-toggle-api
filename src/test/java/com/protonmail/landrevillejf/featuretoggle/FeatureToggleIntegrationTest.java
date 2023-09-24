@@ -29,7 +29,7 @@ public class FeatureToggleIntegrationTest {
     private ICommonService<FeatureToggle> iCommonService;
 
     @Test
-    public void testGetAllCategoriesEndpoint() throws Exception {
+    public void testGetAllFeaturesTogglesEndpoint() throws Exception {
         FeatureToggle featureToggle = new FeatureToggle();
         featureToggle.setName("featureToggle Name");
         featureToggle.setDescription("featureToggle Description");
