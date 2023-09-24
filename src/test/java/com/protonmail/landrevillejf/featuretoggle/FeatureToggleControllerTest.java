@@ -39,16 +39,16 @@ public class FeatureToggleControllerTest {
     }
 
     @Test
-    public void testGetAllCategories() throws Exception {
+    public void testGetAllFeatures() throws Exception {
         FeatureToggle feature1 = new FeatureToggle("feature1", "Description1",true);
         FeatureToggle feature2 = new FeatureToggle("feature2", "Description2",false);
-        List<FeatureToggle> categories = Arrays.asList(feature1, feature2);
+        List<FeatureToggle> featureToggles = Arrays.asList(feature1, feature2);
 
-        when(service.findAll(1, 15)).thenReturn(categories);
+        when(service.findAll(1, 15)).thenReturn(featureToggles);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/features")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(categories)));
+                .andExpect(MockMvcResultMatchers.content().json(objectMapper.writeValueAsString(featureToggles)));
     }
 }
