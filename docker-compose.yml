@@ -1,11 +1,11 @@
 version: '2'
 services:
-  cognos-categories-api:
-    container_name: cognos-categories-api
+  feature-toggle-api:
+    container_name: feature-toggle-api
     build:
-      context: cognos-categories-api
+      context: feature-toggle-api
       dockerfile: Dockerfile
-    image: cognos-categories-api:latest
+    image: feature-toggle-api:latest
     ports:
       - 18888:8888
     networks:
