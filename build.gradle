@@ -116,32 +116,27 @@ tasks.register('deleteStaticFolder', Delete) {
     }
 }
 
-/*task cucumber() {
+tasks.register('cucumber') {
     dependsOn assemble, compileTestJava
     doLast {
         javaexec {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = [
-                    '--glue', 'com.protonmail.landrevillejf.featuretoggle.cucumber', // Set your glue path
+                    '--glue', 'com.protonmail.landrevillejf.cognos.categories.api.cucumber', // Set your glue path
                     '--plugin', 'pretty', // You can customize the output format
                     'src/test/resources' // Path to your feature files
             ]
         }
     }
-}*/
+}
 
-tasks.register('cucumberCli') {
-    dependsOn assemble, testClasses
-    doLast {
-        javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = [
-                    '--plugin', 'pretty',
-                    '--plugin', 'html:target/cucumber-report.html',
-                    '--glue', 'com.protonmail.landrevillejf.featuretoggle.cucumber',
-                    'src/test/resources']
-        }
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = false
+        html.required = true
+        html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+        minHeapSize = "200m"
+        maxHeapSize = "1g"
     }
 }
